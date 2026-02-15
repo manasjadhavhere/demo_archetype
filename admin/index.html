@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Corporate Archetype Tool</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="admin-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>upGrad Admin</h2>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="2" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="11" y="2" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="2" y="11" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="11" y="11" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-item" data-section="leads">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 10C12.2091 10 14 8.20914 14 6C14 3.79086 12.2091 2 10 2C7.79086 2 6 3.79086 6 6C6 8.20914 7.79086 10 10 10Z" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M2 18C2 14.6863 4.68629 12 8 12H12C15.3137 12 18 14.6863 18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    Leads
+                </a>
+                <a href="#" class="nav-item" data-section="analytics">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 17L6 13L10 15L18 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M14 7H18V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Analytics
+                </a>
+                <a href="#" class="nav-item nav-item-danger" data-section="settings">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.5 2.5H11.5C11.7761 2.5 12 2.72386 12 3V4C12 4.55228 12.4477 5 13 5C13.5523 5 14 4.55228 14 4V3C14 1.61929 12.8807 0.5 11.5 0.5H8.5C7.11929 0.5 6 1.61929 6 3V4C6 4.55228 6.44772 5 7 5C7.55228 5 8 4.55228 8 4V3C8 2.72386 8.22386 2.5 8.5 2.5Z" fill="currentColor"/>
+                        <path d="M3 5C2.44772 5 2 5.44772 2 6V17C2 17.5523 2.44772 18 3 18H17C17.5523 18 18 17.5523 18 17V6C18 5.44772 17.5523 5 17 5H3Z" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M7 10L13 10M10 7L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    Settings
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Header -->
+            <header class="content-header">
+                <h1 id="section-title">Dashboard</h1>
+                <div class="header-actions">
+                    <button class="btn-secondary" onclick="window.location.reload()">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14 8C14 11.3137 11.3137 14 8 14C4.68629 14 2 11.3137 2 8C2 4.68629 4.68629 2 8 2C9.84871 2 11.5 2.84871 12.6213 4.17157" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M14 2V5H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Refresh
+                    </button>
+                    <button class="btn-primary" onclick="showExportModal()">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14 10V12.6667C14 13.403 13.403 14 12.6667 14H3.33333C2.59695 14 2 13.403 2 12.6667V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8 2V10M8 10L5.33333 7.33333M8 10L10.6667 7.33333" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Export CSV
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <svg class="stat-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="20" cy="12" r="6" stroke="#EB2226" stroke-width="2"/>
+                            <path d="M8 32C8 25.3726 13.3726 20 20 20C26.6274 20 32 25.3726 32 32" stroke="#EB2226" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <div class="stat-details">
+                            <div class="stat-label">Total Leads</div>
+                            <div class="stat-value" id="total-leads">0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <svg class="stat-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="8" y="8" width="24" height="24" rx="2" stroke="#EB2226" stroke-width="2"/>
+                            <path d="M14 8V6M26 8V6M8 16H32" stroke="#EB2226" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <div class="stat-details">
+                            <div class="stat-label">Strategic Architects</div>
+                            <div class="stat-value" id="architect-count">0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <svg class="stat-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 8L24 16H32L26 22L28 30L20 25L12 30L14 22L8 16H16L20 8Z" stroke="#3B82F6" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="stat-details">
+                            <div class="stat-label">Operational Commanders</div>
+                            <div class="stat-value" id="commander-count">0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <svg class="stat-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 8V20M20 20L28 28M20 20L12 28" stroke="#EC4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="20" cy="20" r="14" stroke="#EC4899" stroke-width="2"/>
+                        </svg>
+                        <div class="stat-details">
+                            <div class="stat-label">Innovation Pioneers</div>
+                            <div class="stat-value" id="pioneer-count">0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <svg class="stat-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 26C23.3137 26 26 23.3137 26 20C26 16.6863 23.3137 14 20 14C16.6863 14 14 16.6863 14 20C14 23.3137 16.6863 26 20 26Z" stroke="#10B981" stroke-width="2"/>
+                            <path d="M10 10L14 14M30 10L26 14M10 30L14 26M30 30L26 26" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <div class="stat-details">
+                            <div class="stat-label">People Catalysts</div>
+                            <div class="stat-value" id="catalyst-count">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-section">
+                    <h2>Recent Leads</h2>
+                    <div id="recent-leads" class="leads-preview">
+                        <!-- Recent leads will be displayed here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Leads Section -->
+            <section id="leads-section" class="content-section">
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-header">
+                        <h3>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 8px;">
+                                <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                                <path d="M7 2V4M13 2V4M3 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                            Filter by Date Range
+                        </h3>
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">All Time</button>
+                        <button class="filter-btn" data-filter="today">Today</button>
+                        <button class="filter-btn" data-filter="week">This Week</button>
+                        <button class="filter-btn" data-filter="month">This Month</button>
+                        <button class="filter-btn" data-filter="year">This Year</button>
+                    </div>
+                    <div class="filter-stats">
+                        <div class="filter-stat">
+                            <span class="filter-stat-label">Showing</span>
+                            <span class="filter-stat-value" id="filtered-count">0</span>
+                        </div>
+                        <div class="filter-stat">
+                            <span class="filter-stat-label">Total Leads</span>
+                            <span class="filter-stat-value" id="total-count">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="leads-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Designation</th>
+                                <th>Company</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Interest</th>
+                                <th>Archetype</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leads-table-body">
+                            <!-- Leads will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics-section" class="content-section">
+                <div class="analytics-grid">
+                    <div class="chart-card">
+                        <h3>Archetype Distribution</h3>
+                        <div id="archetype-chart" class="chart">
+                            <!-- Simple bar chart will be rendered here -->
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3>Area of Interest</h3>
+                        <div id="interest-chart" class="chart">
+                            <!-- Interest distribution -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="content-section">
+                <div class="settings-container">
+                    <div class="danger-zone">
+                        <div class="danger-zone-header">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <div>
+                                <h2>Danger Zone</h2>
+                                <p>Irreversible actions that affect your data</p>
+                            </div>
+                        </div>
+                        
+                        <div class="danger-action">
+                            <div class="danger-action-info">
+                                <h3>Reset All Data</h3>
+                                <p>Permanently delete all leads from the database. This action cannot be undone.</p>
+                            </div>
+                            <button class="btn-danger" onclick="showResetModal()">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2 4H14M6 4V2.5C6 2.22386 6.22386 2 6.5 2H9.5C9.77614 2 10 2.22386 10 2.5V4M12 4V13C12 13.5523 11.5523 14 11 14H5C4.44772 14 4 13.5523 4 13V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Reset Database
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Reset Confirmation Modal -->
+    <div id="reset-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content modal-danger">
+            <div class="modal-header">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 8px;">
+                        <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Confirm Database Reset
+                </h2>
+                <button class="modal-close" onclick="closeResetModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="warning-message">
+                    <p><strong>⚠️ Warning:</strong> This will permanently delete all leads from the database.</p>
+                    <p>This action cannot be undone. All lead data, including contact information and assessment results, will be lost forever.</p>
+                </div>
+                
+                <div class="confirmation-input">
+                    <label for="reset-confirmation">Type <strong>admin</strong> to confirm:</label>
+                    <input 
+                        type="text" 
+                        id="reset-confirmation" 
+                        placeholder="Type 'admin' here"
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn-secondary" onclick="closeResetModal()">Cancel</button>
+                    <button class="btn-danger" onclick="confirmReset()" id="confirm-reset-btn" disabled>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 4H14M6 4V2.5C6 2.22386 6.22386 2 6.5 2H9.5C9.77614 2 10 2.22386 10 2.5V4M12 4V13C12 13.5523 11.5523 14 11 14H5C4.44772 14 4 13.5523 4 13V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Delete All Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div id="export-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Export Leads to CSV</h2>
+                <button class="modal-close" onclick="closeExportModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">Select the date range for leads you want to export:</p>
+                <div class="export-options">
+                    <button class="export-option-btn" onclick="exportCSV('all')">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M10 6V10L13 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        <div>
+                            <div class="option-title">All Time</div>
+                            <div class="option-desc">Export all leads</div>
+                        </div>
+                    </button>
+                    <button class="export-option-btn" onclick="exportCSV('today')">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M7 2V4M13 2V4M3 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        <div>
+                            <div class="option-title">Today</div>
+                            <div class="option-desc">Leads from today</div>
+                        </div>
+                    </button>
+                    <button class="export-option-btn" onclick="exportCSV('week')">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M7 2V4M13 2V4M3 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <circle cx="7" cy="11" r="1" fill="currentColor"/>
+                            <circle cx="10" cy="11" r="1" fill="currentColor"/>
+                            <circle cx="13" cy="11" r="1" fill="currentColor"/>
+                        </svg>
+                        <div>
+                            <div class="option-title">This Week</div>
+                            <div class="option-desc">Last 7 days</div>
+                        </div>
+                    </button>
+                    <button class="export-option-btn" onclick="exportCSV('month')">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M7 2V4M13 2V4M3 8H17M7 11H7.01M10 11H10.01M13 11H13.01M7 14H7.01M10 14H10.01M13 14H13.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        <div>
+                            <div class="option-title">This Month</div>
+                            <div class="option-desc">Current month</div>
+                        </div>
+                    </button>
+                    <button class="export-option-btn" onclick="exportCSV('year')">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M7 2V4M13 2V4M3 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M6 11H14M6 14H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        <div>
+                            <div class="option-title">This Year</div>
+                            <div class="option-desc">Current year</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+
+</html>
