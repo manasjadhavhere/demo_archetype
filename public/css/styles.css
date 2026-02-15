@@ -1,6 +1,6 @@
 /* ============================================
-   CORPORATE ARCHETYPE TOOL - UPGRAD EXACT MATCH
-   Theme: Clean White, Soft Shadows, UpGrad Red
+   CORPORATE ARCHETYPE TOOL - DEMO ARCHETYPE EXACT MATCH
+   Theme: Clean White, Soft Shadows, Demo Archetype Red
    ============================================ */
 
 /* CSS Reset & Base */
@@ -11,7 +11,7 @@
 }
 
 :root {
-  /* Color Palette - Exact upGrad Colors */
+  /* Color Palette - Exact Demo Archetype Colors */
   --primary-red: #EB2226;
   --primary-hover: #D11F23;
   --bg-color: #FFFFFF;
@@ -23,7 +23,7 @@
   --border-color: #DDDDDD;
   --input-bg: #F8F8F8;
 
-  /* Shadows - Very subtle like upGrad */
+  /* Shadows - Very subtle like Demo Archetype */
   --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
   --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.06);
   --shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.1);
@@ -35,11 +35,11 @@
   --spacing-lg: 2rem;
   --spacing-xl: 3rem;
 
-  /* Typography - upGrad uses Inter */
+  /* Typography - Demo Archetype uses Inter */
   --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
   --font-heading: 'Inter', sans-serif;
 
-  /* Radii - upGrad style */
+  /* Radii - Demo Archetype style */
   --radius-card: 16px;
   --radius-btn: 8px;
   --radius-input: 12px;
@@ -87,7 +87,7 @@ body {
   flex-direction: column;
 }
 
-/* Logo Positioning - Exact upGrad style */
+/* Logo Positioning - Exact Demo Archetype style */
 .logo-container {
   position: absolute;
   top: 24px;
@@ -177,7 +177,7 @@ body {
   }
 }
 
-/* Headline Styling - Exact upGrad match */
+/* Headline Styling - Exact Demo Archetype match */
 .landing-headline {
   font-family: var(--font-heading);
   font-size: clamp(2rem, 3.5vw, 2.75rem);
@@ -242,7 +242,7 @@ body {
   flex-shrink: 0;
 }
 
-/* CTA Buttons Group - Exact upGrad style */
+/* CTA Buttons Group - Exact Demo Archetype style */
 .cta-group {
   display: flex;
   gap: 16px;
@@ -288,7 +288,7 @@ body {
   transform: translateY(-1px);
 }
 
-/* Enquiry Text - upGrad style */
+/* Enquiry Text - Demo Archetype style */
 .enquiry-text {
   color: var(--text-muted);
   font-size: 0.95rem;

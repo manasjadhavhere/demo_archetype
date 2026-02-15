@@ -1,10 +1,10 @@
-# Corporate Archetype Diagnostic Tool | upGrad
+# Corporate Archetype Diagnostic Tool | Demo Archetype
 
 A professional, enterprise-grade web application for assessing corporate leadership archetypes and capturing qualified leads.
 
 ## 🎯 Overview
 
-This tool helps professionals discover their corporate archetype through an interactive 2-minute assessment, providing personalized program recommendations from upGrad's portfolio.
+This tool helps professionals discover their corporate archetype through an interactive 2-minute assessment, providing personalized program recommendations from Demo Archetype's portfolio.
 
 ### Key Features
 
@@ -12,7 +12,7 @@ This tool helps professionals discover their corporate archetype through an inte
 - Interactive 2-minute assessment with progress tracking
 - Personalized archetype results (Strategic Architect, Operational Commander, Innovation Pioneer, People Catalyst)
 - Tailored program recommendations
-- Professional upGrad branding and design
+- Professional Demo Archetype branding and design
 - Instructions popup for first-time users
 - Mobile-responsive design
 
@@ -35,7 +35,7 @@ This tool helps professionals discover their corporate archetype through an inte
 ```bash
 # Clone the repository
 git clone <your-repo-url>
-cd upgrad
+cd corporate-archetype-tool
 
 # Install dependencies
 npm install
@@ -52,7 +52,7 @@ npm start
 ## 📁 Project Structure
 
 ```
-upgrad/
+corporate-archetype-tool/
 ├── admin/                  # Admin panel
 │   ├── css/
 │   │   └── admin.css      # Admin styles
@@ -230,7 +230,7 @@ npm start
 ## 🎨 Design System
 
 ### Colors
-- Primary Red: `#EB2226` (upGrad brand)
+- Primary Red: `#EB2226` (Demo Archetype brand)
 - Background: `#FFFFFF` (Clean white)
 - Text: `#000000` / `#333333`
 - Borders: `#DDDDDD`
@@ -273,7 +273,7 @@ npm start
 
 ## 🤝 Contributing
 
-This is a proprietary project for upGrad. For internal contributions:
+This is a proprietary project for Demo Archetype. For internal contributions:
 
 1. Create a feature branch
 2. Make your changes
@@ -282,18 +282,18 @@ This is a proprietary project for upGrad. For internal contributions:
 
 ## 📄 License
 
-Proprietary - upGrad AIverse
+Proprietary - Demo Archetype
 
 ## 📞 Support
 
 For technical support or questions:
-- Email: support@upgrad.com
+- Email: support@demoarchetype.com
 - Phone: 1800 210 2020
 
 ## 🎉 Credits
 
-Developed for upGrad AIverse
-- Design: upGrad Brand Guidelines
+Developed for Demo Archetype
+- Design: Demo Archetype Brand Guidelines
 - Development: Custom built
 - Icons: Custom SVG icons
 

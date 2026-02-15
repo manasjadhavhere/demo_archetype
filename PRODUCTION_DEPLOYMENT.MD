@@ -450,7 +450,7 @@ Consider migrating to PostgreSQL or MySQL for:
 ### Demo Script
 
 **Introduction (1 min):**
-"This is the Corporate Archetype Diagnostic Tool for upGrad. It helps professionals discover their leadership style and get personalized program recommendations."
+"This is the Corporate Archetype Diagnostic Tool for Demo Archetype. It helps professionals discover their leadership style and get personalized program recommendations."
 
 **User Flow (3 min):**
 - Show instructions popup

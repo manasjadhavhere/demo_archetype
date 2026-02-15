@@ -20,7 +20,7 @@
 - ✅ Program recommendations
 - ✅ Lead capture with validation
 - ✅ Mobile responsive design
-- ✅ upGrad branding throughout
+- ✅ Demo Archetype branding throughout
 
 **Admin Panel:**
 - ✅ Real-time dashboard with statistics
@@ -101,7 +101,7 @@ leads-year-2026-02-15.csv
 ## 📁 Project Structure
 
 ```
-upgrad/
+corporate-archetype-tool/
 ├── admin/                     # Admin panel
 │   ├── css/admin.css         # Styles with reset modal
 │   ├── js/admin.js           # Logic with reset function
@@ -157,7 +157,7 @@ GET    /api/health         # Health check
 
 ### Colors
 ```css
-Primary Red:    #EB2226  /* upGrad brand */
+Primary Red:    #EB2226  /* Demo Archetype brand */
 Hover Red:      #D11F23
 Background:     #FFFFFF
 Text Black:     #000000
@@ -314,7 +314,7 @@ npm start
 1. **Instructions Popup** - Clear onboarding
 2. **2-Minute Assessment** - Quick and engaging
 3. **Personalized Results** - Tailored recommendations
-4. **Professional Design** - upGrad branding
+4. **Professional Design** - Demo Archetype branding
 5. **Mobile Responsive** - Works everywhere
 
 ### Admin Experience
@@ -346,7 +346,7 @@ npm start
 - API Health: `/api/health`
 
 ### Contact
-- Email: support@upgrad.com
+- Email: support@demoarchetype.com
 - Phone: 1800 210 2020
 
 ---

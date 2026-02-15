@@ -94,7 +94,7 @@ async function startServer() {
             console.log('');
             console.log('==============================================');
             console.log('  Corporate Archetype Diagnostic Tool');
-            console.log('  upGrad AIverse');
+            console.log('  Demo Archetype');
             console.log('==============================================');
             console.log('');
             console.log(`✓ Server running on: http://localhost:${PORT}`);
