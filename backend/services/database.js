@@ -2,8 +2,15 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
 
-// Database file path
-const DB_PATH = path.join(__dirname, '../data/leads.db');
+// Database file path - ensure data directory exists
+const DATA_DIR = path.join(__dirname, '../data');
+const DB_PATH = path.join(DATA_DIR, 'leads.db');
+
+// Ensure data directory exists
+if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+    console.log('Created data directory');
+}
 
 // Initialize database
 function initializeDatabase() {

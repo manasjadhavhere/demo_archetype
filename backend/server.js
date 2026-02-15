@@ -97,11 +97,11 @@ async function startServer() {
             console.log('  Demo Archetype');
             console.log('==============================================');
             console.log('');
-            console.log(`✓ Server running on: http://localhost:${PORT}`);
-            console.log(`✓ Admin panel: http://localhost:${PORT}/admin`);
-            console.log(`✓ API endpoints: http://localhost:${PORT}/api`);
+            console.log(`✓ Server running on port: ${PORT}`);
+            console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
+            console.log(`✓ Admin panel: /admin`);
+            console.log(`✓ API endpoints: /api`);
             console.log('');
-            console.log('Press Ctrl+C to stop the server');
             console.log('==============================================');
         });
     } catch (error) {

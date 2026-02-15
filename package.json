@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Interactive Corporate Archetype Diagnostic Tool for Demo Archetype",
   "main": "backend/server.js",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
   "scripts": {
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js"
