@@ -60,6 +60,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: 'kern' 1, 'liga' 1;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ============================================
@@ -262,12 +264,18 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(235, 34, 38, 0.2);
+  min-height: 48px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-solid:hover {
   background-color: var(--primary-hover);
   box-shadow: 0 4px 8px rgba(235, 34, 38, 0.3);
   transform: translateY(-1px);
+}
+
+.btn-solid:active {
+  transform: translateY(0);
 }
 
 .btn-outline {
@@ -281,11 +289,17 @@ body {
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-height: 48px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-outline:hover {
   background-color: #F8F8F8;
   transform: translateY(-1px);
+}
+
+.btn-outline:active {
+  transform: translateY(0);
 }
 
 /* Enquiry Text - Demo Archetype style */
@@ -396,6 +410,10 @@ body {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .option-btn::before {
@@ -636,6 +654,8 @@ body {
   box-shadow: 0 4px 12px rgba(235, 34, 38, 0.3);
   position: relative;
   overflow: hidden;
+  min-height: 56px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .submit-btn::before {
@@ -847,14 +867,15 @@ body {
   align-items: center;
   justify-content: center;
   animation: fadeIn 0.3s ease;
+  padding: 1rem;
 }
 
 .instructions-modal {
   background: white;
   border-radius: var(--radius-card);
   max-width: 600px;
-  width: 90%;
-  max-height: 85vh;
+  width: 100%;
+  max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.4s ease-out;
@@ -884,6 +905,7 @@ body {
   font-size: 1.75rem;
   margin-bottom: 0.5rem;
   font-weight: 700;
+  line-height: 1.3;
 }
 
 .instructions-header p {
@@ -928,6 +950,7 @@ body {
 .step-number {
   background: var(--primary-red);
   color: white;
+  min-width: 32px;
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -996,72 +1019,95 @@ body {
    ============================================ */
 
 @media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .main-card {
+    margin: 1rem auto;
+    border-radius: 12px;
+  }
+
+  .logo-container {
+    top: 16px;
+    left: 16px;
+  }
+
+  .logo-text {
+    font-size: 1.5rem;
+  }
+
   .landing-content {
-    padding: var(--spacing-lg);
+    padding: 2rem 1.5rem;
+  }
+
+  .landing-headline {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .landing-subtext {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .benefit-list {
+    margin-bottom: 2rem;
+  }
+
+  .benefit-list li {
+    font-size: 0.9rem;
   }
 
   .cta-group {
     flex-direction: column;
+    gap: 0.75rem;
   }
 
   .btn-solid,
   .btn-outline {
     width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .enquiry-text {
+    font-size: 0.85rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .landing-image-side {
+    min-height: 250px;
+  }
+
+  /* Quiz Section Mobile */
+  #quiz {
+    padding: 2rem 1.5rem;
   }
 
   .question-emoji {
     font-size: 3rem;
+    margin-bottom: 1rem;
   }
 
   .question-text {
     font-size: 1.4rem;
+    margin-bottom: 2rem;
   }
 
   .option-btn {
     font-size: 0.95rem;
-    padding: 16px 18px;
+    padding: 1rem 1.25rem;
   }
 
-  .form-section {
-    width: 95%;
-    max-height: 90vh;
-    padding: var(--spacing-md);
+  .option-btn::after {
+    right: 1rem;
   }
 
-  .form-section .form-title {
-    font-size: 1.5rem;
-  }
-
-  .notification {
-    right: 10px;
-    left: 10px;
-    top: 10px;
-  }
-
-  .instructions-modal {
-    width: 95%;
-    max-height: 90vh;
-  }
-
-  .instructions-header {
-    padding: 1.5rem;
-  }
-
-  .instructions-header h2 {
-    font-size: 1.4rem;
-  }
-
-  .instructions-content {
-    padding: 1.5rem;
-  }
-
-  .instructions-footer {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .start-assessment-btn {
-    width: 100%;
+  /* Result Section Mobile */
+  #result {
+    padding: 2rem 1.5rem;
   }
 
   .archetype-icon {
@@ -1072,18 +1118,146 @@ body {
     font-size: 1.8rem;
   }
 
+  .result-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .insight-card {
+    padding: 1.25rem;
+  }
+
   .programs-grid {
     grid-template-columns: 1fr;
+  }
+
+  .program-card {
+    padding: 1.25rem;
+  }
+
+  /* Form Section Mobile */
+  .form-section {
+    width: 95%;
+    max-height: 90vh;
+    padding: 1.5rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .form-section .form-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-section .form-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+  }
+
+  .submit-btn {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  /* Instructions Modal Mobile */
+  .instructions-overlay {
+    padding: 0.5rem;
+  }
+
+  .instructions-modal {
+    width: 100%;
+    max-height: 95vh;
+  }
+
+  .instructions-header {
+    padding: 1.5rem;
+  }
+
+  .instructions-header h2 {
+    font-size: 1.4rem;
+    padding-right: 2rem;
+  }
+
+  .instructions-header p {
+    font-size: 0.9rem;
+  }
+
+  .close-instructions {
+    top: 1rem;
+    right: 1rem;
+    width: 32px;
+    height: 32px;
+  }
+
+  .instructions-content {
+    padding: 1.5rem;
+  }
+
+  .instruction-step {
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .step-number {
+    min-width: 28px;
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+
+  .step-content h3 {
+    font-size: 1rem;
+  }
+
+  .step-content p {
+    font-size: 0.9rem;
+  }
+
+  .instructions-footer {
+    padding: 1rem 1.5rem;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-info {
+    justify-content: center;
+    font-size: 0.85rem;
+  }
+
+  .start-assessment-btn {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+  }
+
+  /* Notification Mobile */
+  .notification {
+    right: 0.5rem;
+    left: 0.5rem;
+    top: 0.5rem;
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
   .landing-headline {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
 
   .landing-subtext {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .question-emoji {
@@ -1095,6 +1269,19 @@ body {
   }
 
   .option-btn {
-    padding: 14px 16px;
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .archetype-title {
+    font-size: 1.5rem;
+  }
+
+  .form-section {
+    padding: 1.25rem;
+  }
+
+  .form-section .form-title {
+    font-size: 1.3rem;
   }
 }

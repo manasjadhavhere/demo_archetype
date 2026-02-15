@@ -6,7 +6,6 @@ const database = require('./services/database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const HOST = '0.0.0.0'; // Required for Fly.io
 
 // Security: Rate limiting (simple in-memory implementation)
 const requestCounts = new Map();
@@ -71,14 +70,8 @@ app.get('/', (req, res) => {
 app.get('/api/health', (req, res) => {
     res.json({
         status: 'healthy',
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime()
+        timestamp: new Date().toISOString()
     });
-});
-
-// Fly.io health check
-app.get('/health', (req, res) => {
-    res.status(200).send('OK');
 });
 
 // 404 handler
@@ -97,14 +90,14 @@ async function startServer() {
     try {
         await database.initializeDatabase();
 
-        app.listen(PORT, HOST, () => {
+        app.listen(PORT, () => {
             console.log('');
             console.log('==============================================');
             console.log('  Corporate Archetype Diagnostic Tool');
             console.log('  Demo Archetype');
             console.log('==============================================');
             console.log('');
-            console.log(`✓ Server running on ${HOST}:${PORT}`);
+            console.log(`✓ Server running on port: ${PORT}`);
             console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
             console.log(`✓ Admin panel: /admin`);
             console.log(`✓ API endpoints: /api`);
