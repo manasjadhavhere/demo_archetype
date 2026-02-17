@@ -1,304 +1,233 @@
-# Corporate Archetype Diagnostic Tool | Demo Archetype
+# upGrad AI Specialization Assessment Platform
 
-A professional, enterprise-grade web application for assessing corporate leadership archetypes and capturing qualified leads.
+A gamified, interactive assessment platform that helps users discover their perfect AI career path through a fun, Kahoot-style quiz experience.
 
-## 🎯 Overview
+## 🎯 Features
 
-This tool helps professionals discover their corporate archetype through an interactive 2-minute assessment, providing personalized program recommendations from Demo Archetype's portfolio.
-
-### Key Features
-
-**User-Facing:**
-- Interactive 2-minute assessment with progress tracking
-- Personalized archetype results (Strategic Architect, Operational Commander, Innovation Pioneer, People Catalyst)
-- Tailored program recommendations
-- Professional Demo Archetype branding and design
-- Instructions popup for first-time users
-- Mobile-responsive design
-
-**Admin Panel:**
-- Real-time dashboard with statistics
-- Date range filters (Today, This Week, This Month, This Year, All Time)
-- Filtered CSV export with custom date ranges
-- Analytics and charts
-- Database reset functionality with confirmation
-- Professional SVG icons throughout
+- **Interactive Quiz**: 15 questions (5 leadership + 10 technical) with countdown timers
+- **AI Specialization Detection**: Identifies whether users are best suited for:
+  - 🎨 Generative AI
+  - 🤖 Agentic AI
+  - 📊 Applied AI
+  - 🌟 AI Generalist
+- **Gamification**: Animations, confetti, sound effects, and background music
+- **Global Leaderboard**: Real-time rankings based on performance
+- **Admin Dashboard**: Comprehensive analytics and lead management
+- **Mobile Responsive**: Optimized for all devices
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Node.js (v14 or higher)
-- npm or yarn
+- npm (v6 or higher)
 
 ### Installation
 
+1. Clone the repository
 ```bash
-# Clone the repository
-git clone <your-repo-url>
-cd corporate-archetype-tool
+git clone <repository-url>
+cd upgrad
+```
 
-# Install dependencies
+2. Install dependencies
+```bash
 npm install
+```
 
-# Start the server
+3. Start the server
+```bash
 npm start
 ```
 
-### Access the Application
+4. Open in browser
+```
+Main App: http://localhost:3000
+Admin Panel: http://localhost:3000/admin
+Leaderboard: http://localhost:3000/leaderboard
+```
 
-- **Main App:** http://localhost:3000
-- **Admin Panel:** http://localhost:3000/admin
+## 📊 Scoring System
+
+- **Technical Questions (Q6-15)**: 10 marks each = 100 total
+- **Leadership Questions (Q1-5)**: For perspective only (not scored)
+- **Leaderboard Ranking**:
+  1. Technical Score (higher is better)
+  2. Time Taken (faster is better, tracked in milliseconds)
+  3. Leadership Score (tiebreaker only)
+
+## 🎮 How It Works
+
+1. **Landing Page**: User sees "How It Works" and starts assessment
+2. **Form**: User fills in basic details (name, email, phone, company, role)
+3. **Assessment**: 15 questions with countdown timers
+   - Leadership questions: 15 seconds each
+   - Technical questions: 20 seconds each
+4. **Results**: Personalized AI specialization with score and recommendations
+5. **Leaderboard**: Global rankings updated in real-time
+
+## 🔧 Admin Panel
+
+Access: `http://localhost:3000/admin`  
+Password: `upgradopen`
+
+### Features
+- Dashboard with participant statistics
+- Complete lead management
+- Leaderboard view
+- Analytics and charts
+- CSV export functionality
+- Auto-refresh every 30 seconds
 
 ## 📁 Project Structure
 
 ```
-corporate-archetype-tool/
-├── admin/                  # Admin panel
-│   ├── css/
-│   │   └── admin.css      # Admin styles
-│   ├── js/
-│   │   └── admin.js       # Admin functionality
-│   └── index.html         # Admin interface
-├── backend/               # Server-side code
-│   ├── data/
-│   │   └── leads.db       # SQLite database
-│   ├── routes/
-│   │   └── leads.js       # API routes
-│   ├── services/
-│   │   └── database.js    # Database operations
+upgrad/
+├── backend/
+│   ├── data/              # SQLite database
+│   ├── routes/            # API routes
+│   ├── services/          # Database services
 │   └── server.js          # Express server
-├── public/                # Main application
-│   ├── css/
-│   │   └── styles.css     # Main styles
-│   ├── js/
-│   │   ├── app.js         # Main app logic
-│   │   ├── archetypes.js  # Archetype definitions
-│   │   └── questions.js   # Assessment questions
-│   └── index.html         # Main interface
-├── .env                   # Environment variables
-├── .gitignore            # Git ignore rules
-├── package.json          # Dependencies
-└── README.MD             # This file
+├── public/
+│   ├── audio/             # Background music
+│   ├── css/               # Stylesheets
+│   ├── js/                # Frontend JavaScript
+│   ├── index.html         # Main app
+│   └── leaderboard.html   # Leaderboard page
+├── admin/
+│   ├── css/               # Admin styles
+│   ├── js/                # Admin JavaScript
+│   ├── index.html         # Admin dashboard
+│   └── login.html         # Admin login
+└── package.json
 ```
 
-## 🎨 Features in Detail
+## 🗄️ Database
 
-### Main Application
+SQLite database with the following schema:
 
-**Instructions Popup**
-- Automatically displays on page load
-- Explains the 4-step assessment process
-- Shows admin access information
-- Professional SVG icons
-
-**Assessment Flow**
-- Progress bar showing completion
-- Emoji-based questions for engagement
-- Smooth transitions between questions
-- Real-time score calculation
-
-**Results & Lead Capture**
-- Blurred results preview
-- Form overlay for lead capture
-- Email and phone validation
-- Results reveal after submission
-
-### Admin Panel
-
-**Dashboard**
-- Total leads count
-- Archetype distribution
-- Recent leads preview
-- Professional statistics cards
-
-**Leads Management**
-- Comprehensive leads table
-- Date range filtering (5 options)
-- Real-time filter statistics
-- Search and sort capabilities
-
-**Export Functionality**
-- Modal with date range selection
-- Filtered CSV export
-- Descriptive filenames (e.g., `leads-today-2026-02-15.csv`)
-- Success notifications
-
-**Settings**
-- Database reset with confirmation
-- Type "admin" to confirm deletion
-- Danger zone with clear warnings
-- Irreversible action protection
-
-## 🔧 Configuration
-
-### Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-PORT=3000
-NODE_ENV=development
+```sql
+CREATE TABLE leads (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  full_name TEXT NOT NULL,
+  designation TEXT,
+  company TEXT,
+  phone TEXT,
+  email TEXT NOT NULL,
+  area_of_interest TEXT,
+  specialization TEXT,
+  management_score INTEGER DEFAULT 0,
+  technical_score INTEGER DEFAULT 0,
+  total_time INTEGER DEFAULT 0,
+  answers TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)
 ```
 
-### Database
-
-The application uses SQLite for data storage. The database is automatically created on first run at `backend/data/leads.db`.
-
-## 📊 API Endpoints
+## 🔌 API Endpoints
 
 ### Public Endpoints
-
-```
-POST   /api/leads          # Submit new lead
-GET    /api/health         # Health check
-```
+- `GET /` - Main application
+- `GET /leaderboard` - Leaderboard page
+- `GET /api/health` - Health check
+- `GET /api/leaderboard` - Get leaderboard data
+- `POST /api/leads` - Submit assessment results
 
 ### Admin Endpoints
+- `GET /admin` - Admin dashboard
+- `GET /api/leads` - Get all leads
+- `GET /api/leads/export` - Export leads as CSV
+- `DELETE /api/leads/reset` - Reset all data
 
-```
-GET    /api/leads          # Get all leads
-GET    /api/leads/:id      # Get specific lead
-DELETE /api/leads/reset    # Reset all data (admin only)
-```
+## 🎨 Customization
 
-## 🎯 Admin Panel Features
+### Theme Colors
+Primary color: `#FF4D00` (Orange)  
+Defined in: `public/css/styles.css` and `admin/css/admin.css`
 
-### Date Filters
-- **All Time:** Export all leads
-- **Today:** Leads from today only
-- **This Week:** Last 7 days
-- **This Month:** Current month
-- **This Year:** Current year
+### Questions
+Edit question sets in: `public/js/questions.js`  
+5 different question sets available for variety
 
-### Database Reset
-1. Navigate to Settings section
-2. Click "Reset Database"
-3. Type "admin" in confirmation box
-4. Click "Delete All Data"
-5. All leads permanently deleted
-
-## 🚀 Deployment
-
-### Recommended: Render.com (Free)
-
-1. **Push to GitHub**
-```bash
-git add .
-git commit -m "Ready for deployment"
-git push origin main
-```
-
-2. **Deploy on Render**
-- Go to https://render.com
-- Sign up with GitHub
-- New Web Service
-- Connect your repository
-- Configure:
-  - Build Command: `npm install`
-  - Start Command: `node backend/server.js`
-  - Plan: Free
-
-3. **Access Your App**
-- Main: `https://your-app.onrender.com`
-- Admin: `https://your-app.onrender.com/admin`
-
-### Alternative Platforms
-- Railway.app
-- Vercel (frontend) + Render (backend)
-- Glitch.com
-- Cyclic.sh
-
-See `PRODUCTION_DEPLOYMENT.MD` for detailed deployment instructions.
-
-## 🧪 Testing
-
-### Local Testing
-```bash
-npm start
-```
-
-### Test Checklist
-- [ ] Instructions popup appears
-- [ ] Assessment completes successfully
-- [ ] Form validation works
-- [ ] Results display correctly
-- [ ] Admin panel loads
-- [ ] Filters work correctly
-- [ ] CSV export works
-- [ ] Reset functionality works
-
-## 🎨 Design System
-
-### Colors
-- Primary Red: `#EB2226` (Demo Archetype brand)
-- Background: `#FFFFFF` (Clean white)
-- Text: `#000000` / `#333333`
-- Borders: `#DDDDDD`
-
-### Typography
-- Font Family: Inter
-- Weights: 400, 500, 600, 700, 800
-
-### Icons
-- Format: SVG (inline)
-- Style: Outline/stroke
-- Stroke Width: 1.5-2px
-
-## 📱 Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers
+### Specializations
+Modify AI specializations in: `public/js/specializations.js`
 
 ## 🔒 Security Features
 
+- Rate limiting (100 requests per minute per IP)
 - Input sanitization
 - Email validation
-- Phone validation
-- Rate limiting (100 requests/minute)
-- Security headers (XSS, CSRF protection)
-- CORS enabled
-- SQL injection prevention
+- Security headers (XSS, Frame, Content-Type protection)
+- Admin password protection
 
-## 📈 Performance
+## 🐛 Troubleshooting
 
-- Lightweight (< 500KB total)
-- Fast load times
-- Optimized images
-- Inline SVG icons
-- Client-side CSV generation
-- Efficient database queries
+### Server won't start
+```bash
+# Check if port 3000 is in use
+netstat -ano | findstr :3000
 
-## 🤝 Contributing
+# Kill the process if needed
+taskkill /F /PID <process_id>
 
-This is a proprietary project for Demo Archetype. For internal contributions:
+# Restart
+npm start
+```
 
-1. Create a feature branch
-2. Make your changes
-3. Test thoroughly
-4. Submit for review
+### Database issues
+```bash
+# Test database
+node test-db.js
+
+# Check schema
+node check-schema.js
+
+# Migrate if needed
+node migrate-database.js
+```
+
+### Leaderboard not loading
+1. Ensure server is running
+2. Check browser console for errors
+3. Verify database has correct schema
+4. Test API: `curl http://localhost:3000/api/leaderboard`
+
+## 📝 Development
+
+### Scripts
+- `npm start` - Start production server
+- `npm run dev` - Start development server with nodemon
+
+### Testing
+1. Take the assessment at `http://localhost:3000`
+2. Check results are saved in database
+3. Verify leaderboard updates
+4. Test admin dashboard functionality
+
+## 🚢 Deployment
+
+### Environment Variables
+Create a `.env` file:
+```
+PORT=3000
+NODE_ENV=production
+```
+
+### Production Checklist
+- [ ] Update admin password
+- [ ] Configure environment variables
+- [ ] Set up database backups
+- [ ] Enable HTTPS
+- [ ] Configure CORS for production domain
+- [ ] Set up monitoring and logging
 
 ## 📄 License
 
-Proprietary - Demo Archetype
+MIT License
 
-## 📞 Support
+## 🤝 Support
 
-For technical support or questions:
-- Email: support@demoarchetype.com
-- Phone: 1800 210 2020
-
-## 🎉 Credits
-
-Developed for Demo Archetype
-- Design: Demo Archetype Brand Guidelines
-- Development: Custom built
-- Icons: Custom SVG icons
+For issues or questions, please contact the development team.
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** February 2026  
-**Status:** Production Ready ✅
+**Built with ❤️ for upGrad**

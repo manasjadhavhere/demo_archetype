@@ -1,151 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-  <meta name="description"
-    content="Discover your Corporate Archetype and unlock your leadership potential with Demo Archetype's personalized assessment">
-  <meta name="theme-color" content="#EB2226">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <title>Corporate Archetype Diagnostic Tool | Demo Archetype</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Discover your AI specialization with upGrad's interactive assessment!">
+  <meta name="theme-color" content="#FF4D00">
+  <title>AI Specialization Quiz | upGrad</title>
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
-
 <body>
+  <!-- Background Music -->
+  <audio id="background-music" loop>
+    <source src="audio/background-music.webm" type="audio/webm">
+  </audio>
 
-  <!-- Instructions Modal -->
-  <div id="instructions-overlay" class="instructions-overlay">
-    <div class="instructions-modal">
-      <div class="instructions-header">
-        <button class="close-instructions" onclick="closeInstructions()">×</button>
-        <h2>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 8px;">
-            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
-          </svg>
-          Welcome to Your Corporate Archetype Assessment
-        </h2>
-        <p>Discover your leadership style in just 2 minutes</p>
-      </div>
-      <div class="instructions-content">
-        <div class="instruction-step">
-          <div class="step-number">1</div>
-          <div class="step-content">
-            <h3>Answer Quick Questions</h3>
-            <p>You'll be presented with a series of scenario-based questions. Choose the option that best reflects your natural approach to leadership and decision-making.</p>
-          </div>
-        </div>
-        <div class="instruction-step">
-          <div class="step-number">2</div>
-          <div class="step-content">
-            <h3>Get Your Archetype</h3>
-            <p>Based on your responses, we'll identify your unique corporate archetype - whether you're a Strategic Architect, Operational Commander, Innovation Pioneer, or People Catalyst.</p>
-          </div>
-        </div>
-        <div class="instruction-step">
-          <div class="step-number">3</div>
-          <div class="step-content">
-            <h3>Receive Personalized Recommendations</h3>
-            <p>Unlock tailored Demo Archetype program recommendations designed to enhance your leadership strengths and accelerate your career growth.</p>
-          </div>
-        </div>
-        <div class="instruction-step">
-          <div class="step-number">4</div>
-          <div class="step-content">
-            <h3>Submit Your Details</h3>
-            <p>After viewing your results, share your contact information to receive a detailed report and connect with our career experts for personalized guidance.</p>
-          </div>
-        </div>
-      </div>
-      <div class="instructions-footer">
-        <div class="admin-info">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
-            <rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M8 5V8L10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          <span>Admin access:</span>
-          <strong>/admin</strong>
-        </div>
-        <button class="start-assessment-btn" onclick="closeInstructions()">Start Assessment</button>
-      </div>
-    </div>
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
   </div>
 
-  <div class="container">
-    <main class="main-card">
-      <div class="logo-container">
-        <div class="logo-text">Demo Archetype</div>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo">upGrad</div>
+      <div class="header-controls">
+        <button class="icon-btn" id="music-toggle" title="Toggle Music">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18V5l12-2v13M9 18c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3zm12-2c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="sound-toggle" title="Toggle Sound Effects">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"/>
+          </svg>
+        </button>
       </div>
+    </header>
 
-      <!-- ========================================
-           STEP 1: LANDING SCREEN (Split Layout)
-           ======================================== -->
-      <section id="landing">
-        <div class="landing-split">
-          <div class="landing-content">
-            <h1 class="landing-headline">
-              <span class="highlight-red">Discover Your Corporate Archetype</span> <span class="text-black">in 2 Minutes</span>
+    <!-- Main Content -->
+    <main class="app-main">
+      <!-- LANDING SCREEN -->
+      <section id="landing" class="screen active">
+        <div class="landing-content">
+          <div class="hero-section">
+            <h1 class="main-title">
+              Discover Your <span class="title-highlight">AI Specialization</span>
             </h1>
-
-            <p class="landing-subtext">
-              Find out how to unlock your next leadership level with a personalized assessment designed for modern executives.
+            <p class="main-subtitle">
+              Take this quick 5-minute assessment to find your perfect AI career path. 
+              Get personalized insights and compete on the global leaderboard!
             </p>
-
-            <ul class="benefit-list">
-              <li>
-                <svg class="check-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="10" cy="10" r="9" stroke="#EB2226" stroke-width="1.5"/>
-                  <path d="M6 10L9 13L14 7" stroke="#EB2226" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>Discover your unique leadership strengths</span>
-              </li>
-              <li>
-                <svg class="check-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="10" cy="10" r="9" stroke="#EB2226" stroke-width="1.5"/>
-                  <path d="M6 10L9 13L14 7" stroke="#EB2226" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>Get personalized program recommendations</span>
-              </li>
-            </ul>
-
-            <div class="cta-group">
-              <button class="btn-outline" onclick="scrollToQuiz()">Talk to Career Expert</button>
-              <button class="btn-solid" id="start-btn">Get Free Career Counselling</button>
-            </div>
-
-            <div class="enquiry-text">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16.5 12.75V15C16.5 15.8284 15.8284 16.5 15 16.5H13.5C6.87258 16.5 1.5 11.1274 1.5 4.5V3C1.5 2.17157 2.17157 1.5 3 1.5H5.25C5.66421 1.5 6 1.83579 6 2.25V5.25C6 5.66421 5.66421 6 5.25 6H3.75C3.75 9.72792 6.77208 12.75 10.5 12.75V11.25C10.5 10.8358 10.8358 10.5 11.25 10.5H14.25C14.6642 10.5 15 10.8358 15 11.25V12.75C15 13.1642 15.3358 13.5 15.75 13.5C16.1642 13.5 16.5 13.1642 16.5 12.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              For enquiries call: <strong>1800 210 2020</strong>
+            
+            <div class="stats-badges">
+              <div class="badge-item">
+                <div class="badge-icon">⏱️</div>
+                <div class="badge-text">5 Minutes</div>
+              </div>
+              <div class="badge-item">
+                <div class="badge-icon">❓</div>
+                <div class="badge-text">15 Questions</div>
+              </div>
+              <div class="badge-item">
+                <div class="badge-icon">🏆</div>
+                <div class="badge-text">Global Leaderboard</div>
+              </div>
             </div>
           </div>
-          <div class="landing-image-side"></div>
+
+          <div class="how-it-works">
+            <h2>🎯 How It Works</h2>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-icon">📝</div>
+                <h3>Enter Details</h3>
+                <p>Share your basic information to get started with the assessment</p>
+              </div>
+              <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-icon">⚡</div>
+                <h3>Answer Questions</h3>
+                <p>15 timed questions testing your leadership and technical skills</p>
+              </div>
+              <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-icon">🎯</div>
+                <h3>Get Results</h3>
+                <p>Discover your AI specialization with personalized insights</p>
+              </div>
+              <div class="step-card">
+                <div class="step-number">4</div>
+                <div class="step-icon">🏆</div>
+                <h3>Compete</h3>
+                <p>See your rank on the global leaderboard and challenge others</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="cta-section">
+            <button class="primary-btn" id="start-btn">
+              <span>Start Assessment</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+            <br>
+            <a href="/leaderboard" class="secondary-link">View Leaderboard →</a>
+          </div>
         </div>
       </section>
 
-      <!-- ========================================
-       STEP 2: ASSESSMENT QUESTIONS
-       ======================================== -->
-      <section id="quiz" class="hidden">
-        <!-- Questions will be dynamically rendered here -->
-      </section>
+      <!-- FORM SCREEN -->
+      <section id="form-screen" class="screen"></section>
 
-      <!-- ========================================
-       STEP 3 & 5: RESULTS & RECOMMENDATIONS
-       ======================================== -->
-      <section id="result" class="hidden">
-        <!-- Results will be dynamically rendered here -->
-      </section>
+      <!-- QUIZ SCREEN -->
+      <section id="quiz" class="screen"></section>
 
+      <!-- RESULT SCREEN -->
+      <section id="result" class="screen"></section>
     </main>
   </div>
 
-  <!-- JavaScript -->
   <script src="js/questions.js"></script>
-  <script src="js/archetypes.js"></script>
+  <script src="js/specializations.js"></script>
+  <script src="js/sounds.js"></script>
+  <script src="js/background.js"></script>
   <script src="js/app.js"></script>
 </body>
-
 </html>

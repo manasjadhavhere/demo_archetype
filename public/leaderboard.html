@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Global Leaderboard - AI Specialization Quiz">
+  <meta name="theme-color" content="#FF4D00">
+  <title>Leaderboard | upGrad AI Quiz</title>
+  <link rel="stylesheet" href="css/leaderboard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <div class="leaderboard-container">
+    <!-- Header -->
+    <header class="leaderboard-header">
+      <a href="/" class="back-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back
+      </a>
+      <h1 class="leaderboard-title">
+        <span class="trophy-icon">🏆</span>
+        Global Leaderboard
+      </h1>
+      <button class="refresh-btn" onclick="loadLeaderboard()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0118.8-4.3M22 12.5a10 10 0 01-18.8 4.2"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Leaderboard Content -->
+    <main class="leaderboard-main">
+      <div id="leaderboard-list" class="leaderboard-list">
+        <!-- Loading state -->
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading leaderboard...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Specialization icons
+    const specializationIcons = {
+      genai: '🎨',
+      agentic: '🤖',
+      applied: '📊',
+      mixed: '🌟'
+    };
+
+    const specializationNames = {
+      genai: 'Generative AI',
+      agentic: 'Agentic AI',
+      applied: 'Applied AI',
+      mixed: 'AI Generalist'
+    };
+
+    // Load leaderboard on page load
+    document.addEventListener('DOMContentLoaded', loadLeaderboard);
+
+    async function loadLeaderboard() {
+      const listContainer = document.getElementById('leaderboard-list');
+      
+      // Show loading state
+      listContainer.innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading leaderboard...</p>
+        </div>
+      `;
+      
+      try {
+        const response = await fetch('/api/leaderboard');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        console.log('Leaderboard data:', data); // Debug log
+        
+        if (data.success && data.leaderboard && data.leaderboard.length > 0) {
+          renderLeaderboard(data.leaderboard);
+        } else {
+          listContainer.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-icon">🎯</div>
+              <h2>No entries yet</h2>
+              <p>Be the first to take the assessment!</p>
+              <a href="/" class="primary-btn">Take Assessment</a>
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error('Error loading leaderboard:', error);
+        listContainer.innerHTML = `
+          <div class="error-state">
+            <div class="error-icon">⚠️</div>
+            <h2>Failed to load leaderboard</h2>
+            <p>${error.message || 'Please try again later'}</p>
+            <button onclick="loadLeaderboard()" class="primary-btn">Retry</button>
+          </div>
+        `;
+      }
+    }
+
+    function renderLeaderboard(entries) {
+      const listContainer = document.getElementById('leaderboard-list');
+      
+      listContainer.innerHTML = entries.map((entry, index) => {
+        const rank = index + 1;
+        const medal = getRankMedal(rank);
+        const icon = specializationIcons[entry.specialization] || '🌟';
+        const specName = specializationNames[entry.specialization] || 'AI Specialist';
+        
+        return `
+          <div class="leaderboard-entry ${rank <= 3 ? 'top-rank' : ''}">
+            <div class="rank-badge">
+              ${medal ? `<span class="medal">${medal}</span>` : `<span class="rank-number">#${rank}</span>`}
+            </div>
+            
+            <div class="entry-info">
+              <div class="entry-name">${entry.full_name}</div>
+              <div class="entry-spec">
+                <span class="spec-icon">${icon}</span>
+                ${specName}
+              </div>
+            </div>
+            
+            <div class="entry-scores">
+              <div class="score-item primary">
+                <span class="score-label">Score</span>
+                <span class="score-value">${entry.technical_score}/100</span>
+              </div>
+              <div class="score-item">
+                <span class="score-label">Time</span>
+                <span class="score-value">${formatTime(entry.total_time)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function getRankMedal(rank) {
+      if (rank === 1) return '🥇';
+      if (rank === 2) return '🥈';
+      if (rank === 3) return '🥉';
+      return null;
+    }
+
+    function formatTime(milliseconds) {
+      const totalSeconds = Math.floor(milliseconds / 1000);
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = totalSeconds % 60;
+      const ms = Math.floor((milliseconds % 1000) / 10); // Centiseconds
+      return `${mins}:${secs.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
+    }
+  </script>
+</body>
+</html>

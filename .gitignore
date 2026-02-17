@@ -2,11 +2,9 @@
 node_modules/
 
 # Environment variables
-.env.local
-.env.development
+.env
 
 # Logs
-logs/
 *.log
 npm-debug.log*
 
@@ -17,13 +15,29 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
-*.swp
-*.swo
 
-# Build outputs
-dist/
-build/
+# Database (keep structure, not data)
+backend/data/*.db
+!backend/data/.gitkeep
+
+# Backup files
+backend/data/*_backup.db
+
+# Test scripts (development only)
+test-db.js
+check-schema.js
+migrate-database.js
+
+# Local scripts
+restart-server.bat
 
 # Temporary files
-tmp/
-temp/
+*.tmp
+*.temp
+
+# Large media files (exclude from git)
+A_Lonely_Cherry_Tree_256KBPS.webm
+*.mp4
+*.mp3
+# Allow small audio files in public/audio
+!public/audio/*.webm

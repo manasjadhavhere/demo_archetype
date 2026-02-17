@@ -24,7 +24,7 @@ function initializeDatabase() {
 
             console.log('Connected to SQLite database');
 
-            // Create leads table
+            // Create leads table with updated schema
             db.run(`
         CREATE TABLE IF NOT EXISTS leads (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,8 +34,11 @@ function initializeDatabase() {
           phone TEXT,
           email TEXT NOT NULL,
           area_of_interest TEXT,
-          archetype TEXT,
-          scores TEXT,
+          specialization TEXT,
+          management_score INTEGER DEFAULT 0,
+          technical_score INTEGER DEFAULT 0,
+          total_time INTEGER DEFAULT 0,
+          answers TEXT,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )
       `, (err) => {
@@ -44,7 +47,26 @@ function initializeDatabase() {
                     reject(err);
                 } else {
                     console.log('Leads table ready');
-                    resolve(db);
+                    
+                    // Check if we need to migrate from old schema
+                    db.all("PRAGMA table_info(leads)", (err, columns) => {
+                        if (err) {
+                            console.error('Error checking schema:', err);
+                            reject(err);
+                            return;
+                        }
+                        
+                        const hasSpecialization = columns.some(col => col.name === 'specialization');
+                        const hasTechnicalScore = columns.some(col => col.name === 'technical_score');
+                        
+                        if (!hasSpecialization || !hasTechnicalScore) {
+                            console.warn('⚠ Old database schema detected!');
+                            console.warn('⚠ Please run: node migrate-database.js');
+                            console.warn('⚠ Then restart the server');
+                        }
+                        
+                        resolve(db);
+                    });
                 }
             });
         });
@@ -57,11 +79,11 @@ function insertLead(leadData) {
         const db = new sqlite3.Database(DB_PATH);
 
         const sql = `
-      INSERT INTO leads (full_name, designation, company, phone, email, area_of_interest, archetype, scores)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO leads (full_name, designation, company, phone, email, area_of_interest, specialization, management_score, technical_score, total_time, answers)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-        const scores = JSON.stringify(leadData.scores || {});
+        const answers = JSON.stringify(leadData.answers || []);
 
         db.run(sql, [
             leadData.fullName,
@@ -70,8 +92,11 @@ function insertLead(leadData) {
             leadData.phone,
             leadData.email,
             leadData.areaOfInterest,
-            leadData.archetype,
-            scores
+            leadData.specialization,
+            leadData.managementScore || 0,
+            leadData.technicalScore || 0,
+            leadData.totalTime || 0,
+            answers
         ], function (err) {
             if (err) {
                 console.error('Error inserting lead:', err);
@@ -95,10 +120,10 @@ function getAllLeads() {
                 console.error('Error fetching leads:', err);
                 reject(err);
             } else {
-                // Parse scores JSON
+                // Parse answers JSON
                 const leads = rows.map(row => ({
                     ...row,
-                    scores: row.scores ? JSON.parse(row.scores) : {}
+                    answers: row.answers ? JSON.parse(row.answers) : []
                 }));
                 resolve(leads);
             }
@@ -118,11 +143,43 @@ function getLeadById(id) {
                 reject(err);
             } else {
                 if (row) {
-                    row.scores = row.scores ? JSON.parse(row.scores) : {};
+                    row.answers = row.answers ? JSON.parse(row.answers) : [];
                 }
                 resolve(row);
             }
             db.close();
+        });
+    });
+}
+
+// Get leaderboard (sorted by technical score, then time with milliseconds, then management score)
+function getLeaderboard() {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH, (err) => {
+            if (err) {
+                console.error('Error opening database for leaderboard:', err);
+                reject(err);
+                return;
+            }
+        });
+
+        const sql = `
+            SELECT id, full_name, specialization, technical_score, management_score, total_time, created_at
+            FROM leads
+            ORDER BY technical_score DESC, total_time ASC, management_score DESC
+            LIMIT 100
+        `;
+
+        db.all(sql, [], (err, rows) => {
+            if (err) {
+                console.error('Error fetching leaderboard:', err);
+                db.close();
+                reject(err);
+            } else {
+                console.log(`Leaderboard query returned ${rows.length} rows`);
+                db.close();
+                resolve(rows);
+            }
         });
     });
 }
@@ -146,11 +203,11 @@ function exportToCSV() {
             }
 
             // CSV header
-            let csv = 'ID,Full Name,Designation,Company,Phone,Email,Area of Interest,Archetype,Created At\n';
+            let csv = 'ID,Full Name,Designation,Company,Phone,Email,Area of Interest,Specialization,Technical Score,Management Score,Total Time,Created At\n';
 
             // CSV rows
             rows.forEach(row => {
-                csv += `${row.id},"${row.full_name}","${row.designation}","${row.company}","${row.phone}","${row.email}","${row.area_of_interest}","${row.archetype}","${row.created_at}"\n`;
+                csv += `${row.id},"${row.full_name}","${row.designation}","${row.company}","${row.phone}","${row.email}","${row.area_of_interest}","${row.specialization}","${row.technical_score}","${row.management_score}","${row.total_time}","${row.created_at}"\n`;
             });
 
             resolve(csv);
@@ -182,6 +239,7 @@ module.exports = {
     insertLead,
     getAllLeads,
     getLeadById,
+    getLeaderboard,
     exportToCSV,
     resetAllLeads
 };

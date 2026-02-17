@@ -51,19 +51,31 @@ app.use((req, res, next) => {
     next();
 });
 
-// Serve static files from public directory
-app.use(express.static(path.join(__dirname, '../public')));
-
-// API Routes
+// API Routes (must come before static files)
 const leadsRouter = require('./routes/leads');
 app.use('/api/leads', leadsRouter);
 
-// Serve admin panel
-app.use('/admin', express.static(path.join(__dirname, '../admin')));
-
-// Root route - serve main app
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+// Leaderboard API endpoint
+app.get('/api/leaderboard', async (req, res) => {
+    try {
+        console.log('Leaderboard endpoint called');
+        const leaderboard = await database.getLeaderboard();
+        console.log(`Returning ${leaderboard.length} leaderboard entries`);
+        
+        res.json({
+            success: true,
+            count: leaderboard.length,
+            leaderboard: leaderboard
+        });
+    } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        console.error('Error stack:', error.stack);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch leaderboard',
+            message: error.message
+        });
+    }
 });
 
 // Health check endpoint
@@ -73,6 +85,24 @@ app.get('/api/health', (req, res) => {
         timestamp: new Date().toISOString()
     });
 });
+
+// HTML Routes (must come before static files to take precedence)
+// Serve leaderboard page
+app.get('/leaderboard', (req, res) => {
+    console.log('Serving leaderboard page');
+    res.sendFile(path.join(__dirname, '../public/leaderboard.html'));
+});
+
+// Root route - serve main app
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
+});
+
+// Serve admin panel
+app.use('/admin', express.static(path.join(__dirname, '../admin')));
+
+// Serve static files from public directory (comes after specific routes)
+app.use(express.static(path.join(__dirname, '../public')));
 
 // 404 handler
 app.use((req, res) => {
@@ -93,15 +123,19 @@ async function startServer() {
         app.listen(PORT, () => {
             console.log('');
             console.log('==============================================');
-            console.log('  Corporate Archetype Diagnostic Tool');
-            console.log('  Demo Archetype');
+            console.log('  🎓 upGrad AI Specialization Quiz');
+            console.log('  🤖 Discover Your AI Superpower!');
             console.log('==============================================');
             console.log('');
             console.log(`✓ Server running on port: ${PORT}`);
             console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
-            console.log(`✓ Admin panel: /admin`);
-            console.log(`✓ API endpoints: /api`);
+            console.log(`✓ Main app: http://localhost:${PORT}`);
+            console.log(`✓ Admin panel: http://localhost:${PORT}/admin`);
+            console.log(`✓ API endpoints: http://localhost:${PORT}/api`);
+            console.log(`✓ Leaderboard: http://localhost:${PORT}/api/leaderboard`);
             console.log('');
+            console.log('==============================================');
+            console.log('  Ready for users! 🚀');
             console.log('==============================================');
         });
     } catch (error) {

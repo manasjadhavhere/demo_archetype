@@ -28,8 +28,11 @@ router.post('/', async (req, res) => {
             phone: sanitizeInput(leadData.phone),
             email: sanitizeInput(leadData.email),
             areaOfInterest: sanitizeInput(leadData.areaOfInterest),
-            archetype: sanitizeInput(leadData.archetype),
-            scores: leadData.scores
+            specialization: sanitizeInput(leadData.specialization),
+            managementScore: parseInt(leadData.managementScore) || 0,
+            technicalScore: parseInt(leadData.technicalScore) || 0,
+            totalTime: parseInt(leadData.totalTime) || 0,
+            answers: leadData.answers
         };
 
         // Validate email format
@@ -128,6 +131,24 @@ router.get('/:id', async (req, res) => {
         console.error('Error fetching lead:', error);
         res.status(500).json({
             error: 'Failed to fetch lead'
+        });
+    }
+});
+
+// GET /api/leaderboard - Get leaderboard rankings
+router.get('/leaderboard/rankings', async (req, res) => {
+    try {
+        const leaderboard = await database.getLeaderboard();
+        
+        res.json({
+            success: true,
+            count: leaderboard.length,
+            leaderboard: leaderboard
+        });
+    } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        res.status(500).json({
+            error: 'Failed to fetch leaderboard'
         });
     }
 });

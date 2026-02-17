@@ -1,7 +1,7 @@
 {
-  "name": "corporate-archetype-tool",
-  "version": "1.0.0",
-  "description": "Interactive Corporate Archetype Diagnostic Tool for Demo Archetype",
+  "name": "upgrad-ai-specialization-quiz",
+  "version": "2.0.0",
+  "description": "Interactive AI Specialization Assessment Platform for upGrad - Gamified quiz to discover your perfect AI career path",
   "main": "backend/server.js",
   "engines": {
     "node": ">=14.0.0",
@@ -11,8 +11,8 @@
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js"
   },
-  "keywords": ["assessment", "lead-capture", "demo-archetype"],
-  "author": "Demo Archetype",
+  "keywords": ["ai-assessment", "lead-capture", "upgrad", "gamification", "ai-specialization", "generative-ai", "agentic-ai", "applied-ai"],
+  "author": "upGrad",
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",

@@ -1,428 +1,592 @@
-// Application State
+// AI Specialization Assessment - Professional Version
 const state = {
-    currentScreen: 'landing', // landing, quiz, form, result
+    currentScreen: 'landing',
     currentQuestion: 0,
     answers: [],
-    scores: { architect: 0, commander: 0, pioneer: 0, catalyst: 0 },
+    managementScore: 0,
+    technicalAnswers: [],
     userData: {},
-    archetype: null
+    specialization: null,
+    startTime: null,
+    endTime: null,
+    totalTime: 0,
+    questionStartTime: null,
+    questionTimes: [],
+    animationInterval: null
 };
 
-// Configuration
 const config = {
-    apiBaseUrl: window.location.origin, // Use current origin for API calls
-    apiTimeout: 10000 // 10 seconds
+    apiBaseUrl: window.location.origin,
+    apiTimeout: 10000
 };
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', function () {
+    console.log('App initialized');
+    console.log('API Base URL:', config.apiBaseUrl);
+    
+    // Test API connection
+    fetch(`${config.apiBaseUrl}/api/health`)
+        .then(res => res.json())
+        .then(data => console.log('API Health Check:', data))
+        .catch(err => console.error('API Health Check Failed:', err));
+    
     initializeApp();
-    // Show instructions modal on page load
-    showInstructions();
 });
 
 function initializeApp() {
-    // Set up event listeners
+    // Start button
     const startBtn = document.getElementById('start-btn');
     if (startBtn) {
-        startBtn.addEventListener('click', startAssessment);
+        startBtn.addEventListener('click', () => {
+            soundManager.playClick();
+            showScreen('form-screen');
+            renderForm();
+        });
+    }
+    
+    // Music toggle
+    const musicToggle = document.getElementById('music-toggle');
+    if (musicToggle) {
+        musicToggle.addEventListener('click', () => {
+            const enabled = soundManager.toggleMusic();
+            musicToggle.classList.toggle('active', enabled);
+            soundManager.playClick();
+        });
+        musicToggle.classList.add('active'); // Start as active
+    }
+    
+    // Sound toggle
+    const soundToggle = document.getElementById('sound-toggle');
+    if (soundToggle) {
+        soundToggle.addEventListener('click', () => {
+            const enabled = soundManager.toggle();
+            soundToggle.classList.toggle('active', enabled);
+            soundManager.playClick();
+        });
+        soundToggle.classList.add('active'); // Start as active
     }
 }
 
-// Show instructions modal
-function showInstructions() {
-    const overlay = document.getElementById('instructions-overlay');
-    if (overlay) {
-        overlay.style.display = 'flex';
+// Screen management
+function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
+    
+    const targetScreen = document.getElementById(screenId);
+    if (targetScreen) {
+        targetScreen.classList.add('active');
+        state.currentScreen = screenId;
     }
 }
 
-// Close instructions modal
-function closeInstructions() {
-    const overlay = document.getElementById('instructions-overlay');
-    if (overlay) {
-        overlay.style.opacity = '0';
-        setTimeout(() => {
-            overlay.style.display = 'none';
-        }, 300);
-    }
+// Render form
+function renderForm() {
+    const formScreen = document.getElementById('form-screen');
+    formScreen.innerHTML = `
+        <div class="form-container">
+            <h2 class="form-title">Let's Get Started</h2>
+            <p class="form-subtitle">Just a few quick details</p>
+
+            <form id="assessment-form">
+                <div class="form-group">
+                    <label for="fullName">Full Name *</label>
+                    <input 
+                        type="text" 
+                        id="fullName" 
+                        name="fullName" 
+                        required 
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        placeholder="your.email@example.com"
+                        autocomplete="email"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone" 
+                        required 
+                        placeholder="+91 98765 43210"
+                        autocomplete="tel"
+                    >
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="company">Company</label>
+                        <input 
+                            type="text" 
+                            id="company" 
+                            name="company" 
+                            placeholder="Your company"
+                            autocomplete="organization"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="designation">Role</label>
+                        <input 
+                            type="text" 
+                            id="designation" 
+                            name="designation" 
+                            placeholder="Your role"
+                            autocomplete="organization-title"
+                        >
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    Start Assessment
+                </button>
+            </form>
+        </div>
+    `;
+
+    // Add form submission handler
+    setTimeout(() => {
+        const form = document.getElementById('assessment-form');
+        if (form) {
+            form.addEventListener('submit', handleFormSubmit);
+            
+            // Add input sound effects
+            form.querySelectorAll('input').forEach(input => {
+                input.addEventListener('focus', () => soundManager.playClick());
+            });
+        }
+    }, 100);
 }
 
-// Start Assessment (Step 1 → Step 2)
+// Handle form submission
+function handleFormSubmit(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    state.userData = {
+        fullName: formData.get('fullName'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        company: formData.get('company') || '',
+        designation: formData.get('designation') || ''
+    };
+
+    // Validate
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(state.userData.email)) {
+        showNotification('Please enter a valid email address', 'error');
+        soundManager.playWarning();
+        return;
+    }
+
+    const phoneRegex = /^[\+]?[0-9\s\-\(\)]{10,}$/;
+    if (!phoneRegex.test(state.userData.phone)) {
+        showNotification('Please enter a valid phone number', 'error');
+        soundManager.playWarning();
+        return;
+    }
+
+    soundManager.playSuccess();
+    soundManager.playWhoosh();
+    startAssessment();
+}
+
+// Start Assessment
 function startAssessment() {
     state.currentScreen = 'quiz';
     state.currentQuestion = 0;
     state.answers = [];
-    state.scores = { architect: 0, commander: 0, pioneer: 0, catalyst: 0 };
+    state.managementScore = 0;
+    state.technicalAnswers = [];
+    state.startTime = Date.now(); // Milliseconds
+    state.questionTimes = [];
 
-    document.getElementById('landing').classList.add('hidden');
-    document.getElementById('quiz').classList.remove('hidden');
-
+    showScreen('quiz');
     renderQuestion();
 }
 
-// Render current question (Step 2)
+// Render current question
 function renderQuestion() {
     const question = questions[state.currentQuestion];
-    const quizContainer = document.getElementById('quiz');
+    const quizScreen = document.getElementById('quiz');
+    
+    state.questionStartTime = Date.now();
 
     const progressPercent = ((state.currentQuestion + 1) / questions.length) * 100;
+    const questionNumber = state.currentQuestion + 1;
 
-    quizContainer.innerHTML = `
-    <div class="quiz-container">
-      <div class="progress-bar">
-        <div class="progress-fill" style="width: ${progressPercent}%"></div>
-      </div>
-      <div class="progress-text">Question ${state.currentQuestion + 1} of ${questions.length}</div>
-      
-      <div class="question-emoji">${question.emoji}</div>
-      <h2 class="question-text">${question.question}</h2>
-      
-      <div class="options-container">
-        ${question.options.map((option, index) => `
-          <button class="option-btn" onclick="selectAnswer(${index})">
-            ${option.text}
-          </button>
-        `).join('')}
-      </div>
-    </div>
-  `;
+    quizScreen.innerHTML = `
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <div class="progress-info">Question ${questionNumber} of ${questions.length}</div>
+                <div class="timer-display" id="timer-display">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    <span id="timer">${question.timeLimit}</span>s
+                </div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progressPercent}%"></div>
+            </div>
+            
+            <div class="question-content">
+                <div class="question-card">
+                    <span class="question-type ${question.type}">${question.type === 'management' ? 'Leadership' : 'Technical'}</span>
+                    <h2 class="question-text">${question.question}</h2>
+                    
+                    <div class="options-grid">
+                        ${question.options.map((option, index) => `
+                            <button class="option-btn" onclick="selectAnswer(${index})" data-index="${index}">
+                                ${option.text}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Start countdown timer
+    startTimer(question.timeLimit);
 }
 
-// Handle answer selection (Step 2)
-function selectAnswer(optionIndex) {
+// Timer functionality
+let timerInterval;
+function startTimer(seconds) {
+    let timeLeft = seconds;
+    const timerElement = document.getElementById('timer');
+    const timerDisplay = document.getElementById('timer-display');
+    
+    if (timerInterval) clearInterval(timerInterval);
+    
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        if (timerElement) {
+            timerElement.textContent = timeLeft;
+            
+            // Add warning effects
+            if (timeLeft <= 5 && timeLeft > 3) {
+                timerDisplay.classList.add('warning');
+                soundManager.playTick();
+            }
+            
+            if (timeLeft <= 3) {
+                timerDisplay.classList.remove('warning');
+                timerDisplay.classList.add('critical');
+                soundManager.playTick();
+            }
+        }
+        
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            soundManager.playWarning();
+            selectAnswer(0, true);
+        }
+    }, 1000);
+}
+
+// Handle answer selection
+function selectAnswer(optionIndex, isTimeout = false) {
+    if (timerInterval) clearInterval(timerInterval);
+    
     const question = questions[state.currentQuestion];
     const selectedOption = question.options[optionIndex];
-
+    
+    // Play sound
+    if (!isTimeout) {
+        soundManager.playPowerUp();
+    }
+    
+    // Calculate time taken
+    const timeTaken = Math.floor((Date.now() - state.questionStartTime) / 1000);
+    state.questionTimes.push(timeTaken);
+    
     // Add selection animation
-    const selectedBtn = event.target.closest('.option-btn');
-    if (selectedBtn) {
-        selectedBtn.style.background = 'linear-gradient(to right, #10B981 0%, #059669 100%)';
-        selectedBtn.style.color = 'white';
-        selectedBtn.style.borderColor = '#10B981';
-        selectedBtn.innerHTML = '✓ ' + selectedBtn.textContent;
+    const selectedBtn = document.querySelector(`.option-btn[data-index="${optionIndex}"]`);
+    if (selectedBtn && !isTimeout) {
+        selectedBtn.classList.add('selected');
     }
 
     // Store answer
     state.answers.push({
         questionId: question.id,
-        optionIndex: optionIndex
+        questionType: question.type,
+        optionIndex: optionIndex,
+        timeTaken: timeTaken,
+        isTimeout: isTimeout
     });
 
     // Update scores
-    for (let archetype in selectedOption.weights) {
-        state.scores[archetype] += selectedOption.weights[archetype];
+    if (question.type === 'management') {
+        state.managementScore += selectedOption.points;
+    } else {
+        state.technicalAnswers.push({
+            specialty: selectedOption.specialty,
+            points: selectedOption.points
+        });
     }
 
-    // Move to next question or show blurred results
+    // Move to next question or finish
     state.currentQuestion++;
 
     if (state.currentQuestion < questions.length) {
-        setTimeout(() => renderQuestion(), 400);
+        setTimeout(() => {
+            soundManager.playWhoosh();
+            renderQuestion();
+        }, isTimeout ? 100 : 600);
     } else {
-        // Quiz complete - determine archetype and show blurred preview
-        determineArchetype();
+        state.endTime = Date.now();
+        state.totalTime = state.endTime - state.startTime; // Total time in milliseconds
+        
         setTimeout(() => {
-            showBlurredResults();
-        }, 400);
+            determineSpecialization();
+            showCongratsAnimation();
+        }, 600);
     }
 }
 
-// Determine archetype based on scores (Step 3)
-function determineArchetype() {
-    let maxScore = 0;
-    let resultArchetype = 'architect';
-
-    for (let archetype in state.scores) {
-        if (state.scores[archetype] > maxScore) {
-            maxScore = state.scores[archetype];
-            resultArchetype = archetype;
-        }
-    }
-
-    state.archetype = resultArchetype;
-}
-
-// Show blurred results preview with form below
-function showBlurredResults() {
-    document.getElementById('quiz').classList.add('hidden');
-    document.getElementById('result').classList.remove('hidden');
-
-    const archetypeData = archetypes[state.archetype];
-
-    // Render blurred result section with form below
-    const resultContainer = document.getElementById('result');
-    resultContainer.innerHTML = `
-    <div class="result-container blurred">
-      <div class="result-header">
-        <div class="archetype-icon">${archetypeData.icon}</div>
-        <h1 class="archetype-title">Your Archetype: ${archetypeData.title}</h1>
-      </div>
-      
-      <div class="result-content">
-        <div class="insight-card">
-          <h3>💪 Your Strength</h3>
-          <p>${archetypeData.strength}</p>
-        </div>
-        
-        <div class="insight-card">
-          <h3>🎯 Growth Gap</h3>
-          <p>${archetypeData.gap}</p>
-        </div>
-        
-        <div class="insight-card highlight">
-          <h3>🚀 Growth Unlock Path</h3>
-          <p>${archetypeData.unlockPath}</p>
-        </div>
-      </div>
-      
-      <div class="programs-section">
-        <h2 class="section-title">Recommended Programs for You</h2>
-        <div class="programs-grid">
-          ${archetypeData.programs.map(program => `
-            <div class="program-card">
-              <h3 class="program-name">${program.name}</h3>
-              <p class="program-benefit">${program.benefit}</p>
-              <button class="cta-btn" onclick="bookCareerCall('${program.name}')">
-                ${program.cta}
-              </button>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    </div>
-
-    <!-- Form Section Below Blurred Results -->
-    <div class="form-section" id="form-section">
-      <div class="form-container">
-        <h2 class="form-title">🎉 Almost There!</h2>
-        <p class="form-subtitle">Enter your details to unlock your personalized archetype results</p>
-
-        <form id="lead-form-reveal">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="fullName">Full Name *</label>
-              <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name" autocomplete="name">
-            </div>
-
-            <div class="form-group">
-              <label for="designation">Current Designation</label>
-              <input type="text" id="designation" name="designation" placeholder="e.g., Senior Manager" autocomplete="organization-title">
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="company">Company Name</label>
-              <input type="text" id="company" name="company" placeholder="Enter your company name" autocomplete="organization">
-            </div>
-
-            <div class="form-group">
-              <label for="phone">Phone Number *</label>
-              <input type="tel" id="phone" name="phone" required 
-                     placeholder="+91 98765 43210"
-                     autocomplete="tel">
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="email">Email Address *</label>
-              <input type="email" id="email" name="email" required 
-                     placeholder="your.email@company.com"
-                     autocomplete="email">
-            </div>
-
-            <div class="form-group">
-              <label for="areaOfInterest">Area of Interest *</label>
-              <select id="areaOfInterest" name="areaOfInterest" required>
-                <option value="">Select your area of interest</option>
-                <option value="Executive MBA">Executive MBA</option>
-                <option value="DBA">Doctor of Business Administration (DBA)</option>
-                <option value="Leadership Programs">Leadership & Management Programs</option>
-                <option value="Operations">Operations & Supply Chain</option>
-                <option value="Innovation">Innovation & Entrepreneurship</option>
-                <option value="HR">HR & Organizational Behavior</option>
-                <option value="Technology">Technology Management</option>
-                <option value="General">General Inquiry</option>
-              </select>
-            </div>
-          </div>
-
-          <button type="submit" class="submit-btn">
-            <span class="btn-text">🔓 Unlock My Results</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  `;
-
-    // Add form submission handler
-    setTimeout(() => {
-        const form = document.getElementById('lead-form-reveal');
-        if (form) {
-            form.addEventListener('submit', handleFormSubmitReveal);
-        }
-    }, 100);
-}
-
-// Handle form submission from reveal form (Step 4)
-async function handleFormSubmitReveal(e) {
-    e.preventDefault();
-
-    // Collect form data
-    const formData = new FormData(e.target);
-    state.userData = {
-        fullName: formData.get('fullName'),
-        designation: formData.get('designation') || '',
-        company: formData.get('company') || '',
-        phone: formData.get('phone'),
-        email: formData.get('email'),
-        areaOfInterest: formData.get('areaOfInterest')
+// Determine AI specialization
+function determineSpecialization() {
+    const scores = {
+        genai: 0,
+        agentic: 0,
+        applied: 0,
+        mixed: 0
     };
-
-    // Validate phone number (more flexible)
-    const phoneRegex = /^[\+]?[0-9\s\-\(\)]{10,}$/;
-    if (!phoneRegex.test(state.userData.phone)) {
-        showNotification('Please enter a valid phone number', 'error');
-        return;
-    }
-
-    // Validate email (simple but effective)
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(state.userData.email)) {
-        showNotification('Please enter a valid email address', 'error');
-        return;
-    }
-
-    // Show loading state
-    const submitBtn = e.target.querySelector('.submit-btn');
-    const btnText = submitBtn.querySelector('.btn-text');
-    const originalText = btnText.textContent;
-    btnText.textContent = '⏳ Submitting...';
-    submitBtn.disabled = true;
-
-    try {
-        // Save lead data to backend
-        await saveLeadData();
-
-        // Show success notification
-        showNotification('✅ Success! Revealing your results...', 'success');
-
-        // Remove blur and hide form
-        setTimeout(() => {
-            revealResults();
-        }, 800);
-    } catch (error) {
-        console.error('Error submitting form:', error);
-        showNotification('❌ Error submitting. Please try again.', 'error');
-        btnText.textContent = originalText;
-        submitBtn.disabled = false;
-    }
-}
-
-// Show notification
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 100);
-
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
-
-// Reveal results by removing blur and hiding form
-function revealResults() {
-    const resultContainer = document.querySelector('.result-container');
-    const formSection = document.getElementById('form-section');
     
-    if (resultContainer) {
-        resultContainer.classList.remove('blurred');
-        resultContainer.classList.add('revealed');
-    }
-    
-    if (formSection) {
-        formSection.style.opacity = '0';
-        formSection.style.transform = 'translate(-50%, -45%)';
-        setTimeout(() => {
-            formSection.style.display = 'none';
-        }, 300);
-    }
-
-    // Scroll to top of results smoothly after form disappears
-    setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 400);
-
-    // Add reset button at the bottom
-    setTimeout(() => {
-        const programsSection = document.querySelector('.programs-section');
-        if (programsSection && !document.querySelector('.reset-section')) {
-            const resetSection = document.createElement('div');
-            resetSection.className = 'reset-section';
-            resetSection.innerHTML = '<button class="reset-btn" onclick="resetAssessment()">🔄 Take Assessment Again</button>';
-            programsSection.after(resetSection);
+    state.technicalAnswers.forEach(answer => {
+        if (answer.specialty && scores.hasOwnProperty(answer.specialty)) {
+            scores[answer.specialty] += answer.points;
         }
-    }, 800);
+    });
+    
+    let maxScore = 0;
+    let topSpecialty = 'mixed';
+    
+    for (let specialty in scores) {
+        if (scores[specialty] > maxScore) {
+            maxScore = scores[specialty];
+            topSpecialty = specialty;
+        }
+    }
+    
+    const sortedScores = Object.values(scores).sort((a, b) => b - a);
+    if (sortedScores[0] - sortedScores[1] < 5 || maxScore < 15) {
+        topSpecialty = 'mixed';
+    }
+    
+    state.specialization = topSpecialty;
+    
+    // Auto-fill area of interest
+    const specializationMap = {
+        genai: 'Generative AI',
+        agentic: 'Agentic AI',
+        applied: 'Applied AI',
+        mixed: 'All AI Domains'
+    };
+    state.userData.areaOfInterest = specializationMap[topSpecialty];
 }
 
-// Save lead data to backend
+// Show congratulations animation as popup
+function showCongratsAnimation() {
+    soundManager.playCelebration();
+    
+    const spec = specializations[state.specialization];
+    
+    // Create confetti
+    createConfetti();
+    
+    // Create congratulations popup
+    const popup = document.createElement('div');
+    popup.className = 'congrats-popup';
+    popup.innerHTML = `
+        <div class="congrats-content">
+            <div class="congrats-icon">${spec.icon}</div>
+            <h2 class="congrats-title">Congratulations!</h2>
+            <p class="congrats-message">You've completed the assessment</p>
+            <div class="congrats-loader">
+                <div class="loader-bar"></div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(popup);
+    
+    // Wait a moment then show results
+    setTimeout(() => {
+        popup.remove();
+        showResults();
+    }, 2500);
+}
+
+// Create confetti effect
+function createConfetti() {
+    const colors = ['#FF4D00', '#6366F1', '#10B981', '#F59E0B', '#EF4444', '#EC4899'];
+    const confettiContainer = document.createElement('div');
+    confettiContainer.className = 'confetti-container';
+    document.body.appendChild(confettiContainer);
+    
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti-piece';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.top = '-10px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        confettiContainer.appendChild(confetti);
+    }
+    
+    setTimeout(() => {
+        confettiContainer.remove();
+    }, 4000);
+}
+
+// Show results
+function showResults() {
+    soundManager.playWhoosh();
+    showScreen('result');
+    
+    const spec = specializations[state.specialization];
+    const resultScreen = document.getElementById('result');
+    
+    // Calculate technical score (10 marks per technical question)
+    const technicalScore = state.technicalAnswers.reduce((sum, ans) => sum + ans.points, 0);
+    const overallScore = technicalScore * 2; // Convert to 100 scale (50 max * 2 = 100)
+    
+    resultScreen.innerHTML = `
+        <div class="results-container">
+            <div class="result-header">
+                <div class="result-icon">${spec.icon}</div>
+                <h1 class="result-title">${spec.title}</h1>
+                <p class="result-subtitle">Your Perfect AI Specialization</p>
+            </div>
+            
+            <div class="overall-score-card">
+                <div class="overall-score-label">Your Score</div>
+                <div class="overall-score-value">${overallScore} <span class="score-max">out of 100</span></div>
+                <div class="score-time">Completed in ${formatTime(state.totalTime)}</div>
+            </div>
+            
+            <div class="result-description">
+                <h3>🎯 Your AI Journey</h3>
+                <p>${spec.story}</p>
+            </div>
+            
+            <div class="result-description">
+                <h3>💪 Your Strengths</h3>
+                <ul class="strengths-list">
+                    ${spec.strengths.map(s => `<li>${s}</li>`).join('')}
+                </ul>
+            </div>
+            
+            <div class="result-description">
+                <h3>🚀 Areas to Develop</h3>
+                <ul class="improvements-list">
+                    ${spec.improvements.map(i => `<li>${i}</li>`).join('')}
+                </ul>
+                <div class="counselor-message">
+                    <p>💬 Want personalized guidance on your AI learning journey? Consider connecting with our expert counselors who can help you choose the right path and accelerate your career growth.</p>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="/leaderboard" class="action-btn primary">
+                    View Leaderboard
+                </a>
+                <button class="action-btn secondary" onclick="resetAssessment()">
+                    Take Again
+                </button>
+            </div>
+        </div>
+    `;
+
+    // Save lead data
+    saveLeadData();
+}
+
+// Save lead data
 async function saveLeadData() {
+    const technicalScore = state.technicalAnswers.reduce((sum, ans) => sum + ans.points, 0);
+    const overallScore = technicalScore * 2; // Convert to 100 scale
+    
+    const leadData = {
+        ...state.userData,
+        specialization: state.specialization,
+        managementScore: state.managementScore,
+        technicalScore: overallScore, // Save as out of 100
+        totalTime: state.totalTime, // Save in milliseconds
+        answers: state.answers
+    };
+    
+    console.log('Saving lead data:', leadData); // Debug log
+    
     try {
         const response = await fetch(`${config.apiBaseUrl}/api/leads`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                ...state.userData,
-                archetype: state.archetype,
-                scores: state.scores
-            })
+            body: JSON.stringify(leadData),
+            timeout: config.apiTimeout
         });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        }
 
         const data = await response.json();
 
-        if (!response.ok) {
+        if (data.success) {
+            console.log('Lead saved successfully:', data);
+            return data;
+        } else {
             throw new Error(data.error || 'Failed to save lead data');
         }
-
-        console.log('Lead saved successfully:', data);
-        return data;
     } catch (error) {
         console.error('Error saving lead:', error);
-        throw error; // Re-throw to be caught by handleFormSubmit
+        // Show error notification but don't block user experience
+        showNotification('Your results are displayed, but there was an issue saving your data. Please contact support if needed.', 'error');
+        return null;
     }
 }
 
-// Book career call handler
-function bookCareerCall(programName) {
-    const message = `Thank you for your interest in ${programName}!\n\nOur career counselor will contact you at ${state.userData.phone} within 24 hours.\n\nEmail confirmation sent to: ${state.userData.email}`;
-    
-    // Show a more professional confirmation
-    if (confirm(message + '\n\nWould you like to take the assessment again?')) {
-        resetAssessment();
-    }
+// Helper functions
+function formatTime(milliseconds) {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    const ms = Math.floor((milliseconds % 1000) / 10); // Get centiseconds (2 digits)
+    return `${mins}:${secs.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
 }
 
-// Reset assessment
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => notification.remove(), 3000);
+}
+
 function resetAssessment() {
-    // Reset state
-    state.currentScreen = 'landing';
-    state.currentQuestion = 0;
-    state.answers = [];
-    state.scores = { architect: 0, commander: 0, pioneer: 0, catalyst: 0 };
-    state.userData = {};
-    state.archetype = null;
-
-    // Reset UI
-    document.getElementById('result').classList.add('hidden');
-    document.getElementById('landing').classList.remove('hidden');
+    if (confirm('Are you sure you want to take the assessment again?')) {
+        soundManager.playClick();
+        location.reload();
+    }
 }

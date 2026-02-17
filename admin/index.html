@@ -4,19 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta name="theme-color" content="#EB2226">
+    <meta name="theme-color" content="#FF4D00">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Admin Dashboard | Corporate Archetype Tool</title>
+    <title>Admin Dashboard | upGrad AI Assessment</title>
     <link rel="stylesheet" href="css/admin.css">
 </head>
 
 <body>
+    <!-- Auth Check Script -->
+    <script>
+        // Check authentication
+        if (sessionStorage.getItem('adminAuth') !== 'true') {
+            window.location.href = '/admin/login.html';
+        }
+    </script>
+
     <div class="admin-container">
 
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo">
-                <h2>Demo Archetype Admin</h2>
+                <h2>upGrad Admin</h2>
             </div>
 
             <nav class="nav-menu">
@@ -36,6 +44,12 @@
                     </svg>
                     Leads
                 </a>
+                <a href="#" class="nav-item" data-section="leaderboard">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 2L12.5 7.5L18 8.5L14 12.5L15 18L10 15L5 18L6 12.5L2 8.5L7.5 7.5L10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                    </svg>
+                    Leaderboard
+                </a>
                 <a href="#" class="nav-item" data-section="analytics">
                     <svg class="nav-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M2 17L6 13L10 15L18 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -45,13 +59,21 @@
                 </a>
                 <a href="#" class="nav-item nav-item-danger" data-section="settings">
                     <svg class="nav-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8.5 2.5H11.5C11.7761 2.5 12 2.72386 12 3V4C12 4.55228 12.4477 5 13 5C13.5523 5 14 4.55228 14 4V3C14 1.61929 12.8807 0.5 11.5 0.5H8.5C7.11929 0.5 6 1.61929 6 3V4C6 4.55228 6.44772 5 7 5C7.55228 5 8 4.55228 8 4V3C8 2.72386 8.22386 2.5 8.5 2.5Z" fill="currentColor"/>
-                        <path d="M3 5C2.44772 5 2 5.44772 2 6V17C2 17.5523 2.44772 18 3 18H17C17.5523 18 18 17.5523 18 17V6C18 5.44772 17.5523 5 17 5H3Z" stroke="currentColor" stroke-width="1.5"/>
-                        <path d="M7 10L13 10M10 7L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M10 1V3M10 17V19M19 10H17M3 10H1M16.364 16.364L14.95 14.95M5.05 5.05L3.636 3.636M16.364 3.636L14.95 5.05M5.05 14.95L3.636 16.364" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                     </svg>
                     Settings
                 </a>
             </nav>
+
+            <div class="sidebar-footer">
+                <button class="logout-btn" onclick="logout()">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 14H3C2.44772 14 2 13.5523 2 13V3C2 2.44772 2.44772 2 3 2H6M11 11L14 8M14 8L11 5M14 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Logout
+                </button>
+            </div>
         </aside>
 
         <!-- Main Content -->
@@ -83,61 +105,50 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <svg class="stat-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="20" cy="12" r="6" stroke="#EB2226" stroke-width="2"/>
-                            <path d="M8 32C8 25.3726 13.3726 20 20 20C26.6274 20 32 25.3726 32 32" stroke="#EB2226" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="20" cy="12" r="6" stroke="#FF4D00" stroke-width="2"/>
+                            <path d="M8 32C8 25.3726 13.3726 20 20 20C26.6274 20 32 25.3726 32 32" stroke="#FF4D00" stroke-width="2" stroke-linecap="round"/>
                         </svg>
                         <div class="stat-details">
-                            <div class="stat-label">Total Leads</div>
+                            <div class="stat-label">Total Participants</div>
                             <div class="stat-value" id="total-leads">0</div>
                         </div>
                     </div>
 
                     <div class="stat-card">
-                        <svg class="stat-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="8" y="8" width="24" height="24" rx="2" stroke="#EB2226" stroke-width="2"/>
-                            <path d="M14 8V6M26 8V6M8 16H32" stroke="#EB2226" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
+                        <div class="stat-icon">🎨</div>
                         <div class="stat-details">
-                            <div class="stat-label">Strategic Architects</div>
-                            <div class="stat-value" id="architect-count">0</div>
+                            <div class="stat-label">Gen AI Specialists</div>
+                            <div class="stat-value" id="genai-count">0</div>
                         </div>
                     </div>
 
                     <div class="stat-card">
-                        <svg class="stat-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M20 8L24 16H32L26 22L28 30L20 25L12 30L14 22L8 16H16L20 8Z" stroke="#3B82F6" stroke-width="2" stroke-linejoin="round"/>
-                        </svg>
+                        <div class="stat-icon">🤖</div>
                         <div class="stat-details">
-                            <div class="stat-label">Operational Commanders</div>
-                            <div class="stat-value" id="commander-count">0</div>
+                            <div class="stat-label">Agentic AI Specialists</div>
+                            <div class="stat-value" id="agentic-count">0</div>
                         </div>
                     </div>
 
                     <div class="stat-card">
-                        <svg class="stat-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M20 8V20M20 20L28 28M20 20L12 28" stroke="#EC4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <circle cx="20" cy="20" r="14" stroke="#EC4899" stroke-width="2"/>
-                        </svg>
+                        <div class="stat-icon">📊</div>
                         <div class="stat-details">
-                            <div class="stat-label">Innovation Pioneers</div>
-                            <div class="stat-value" id="pioneer-count">0</div>
+                            <div class="stat-label">Applied AI Specialists</div>
+                            <div class="stat-value" id="applied-count">0</div>
                         </div>
                     </div>
 
                     <div class="stat-card">
-                        <svg class="stat-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M20 26C23.3137 26 26 23.3137 26 20C26 16.6863 23.3137 14 20 14C16.6863 14 14 16.6863 14 20C14 23.3137 16.6863 26 20 26Z" stroke="#10B981" stroke-width="2"/>
-                            <path d="M10 10L14 14M30 10L26 14M10 30L14 26M30 30L26 26" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
+                        <div class="stat-icon">🌟</div>
                         <div class="stat-details">
-                            <div class="stat-label">People Catalysts</div>
-                            <div class="stat-value" id="catalyst-count">0</div>
+                            <div class="stat-label">AI Generalists</div>
+                            <div class="stat-value" id="mixed-count">0</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="recent-section">
-                    <h2>Recent Leads</h2>
+                    <h2>Recent Participants</h2>
                     <div id="recent-leads" class="leads-preview">
                         <!-- Recent leads will be displayed here -->
                     </div>
@@ -146,7 +157,6 @@
 
             <!-- Leads Section -->
             <section id="leads-section" class="content-section">
-                <!-- Filter Section -->
                 <div class="filter-section">
                     <div class="filter-header">
                         <h3>
@@ -182,12 +192,14 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>Designation</th>
-                                <th>Company</th>
-                                <th>Phone</th>
                                 <th>Email</th>
+                                <th>Phone</th>
+                                <th>Company</th>
                                 <th>Interest</th>
-                                <th>Archetype</th>
+                                <th>Specialization</th>
+                                <th>Tech Score</th>
+                                <th>Mgmt Score</th>
+                                <th>Time</th>
                                 <th>Date</th>
                             </tr>
                         </thead>
@@ -198,13 +210,26 @@
                 </div>
             </section>
 
+            <!-- Leaderboard Section -->
+            <section id="leaderboard-section" class="content-section">
+                <div class="leaderboard-container">
+                    <div class="leaderboard-header-section">
+                        <h2>🏆 Global Leaderboard</h2>
+                        <p>Ranked by Technical Score → Management Score → Time Taken</p>
+                    </div>
+                    <div id="leaderboard-list" class="leaderboard-list">
+                        <!-- Leaderboard will be populated here -->
+                    </div>
+                </div>
+            </section>
+
             <!-- Analytics Section -->
             <section id="analytics-section" class="content-section">
                 <div class="analytics-grid">
                     <div class="chart-card">
-                        <h3>Archetype Distribution</h3>
-                        <div id="archetype-chart" class="chart">
-                            <!-- Simple bar chart will be rendered here -->
+                        <h3>Specialization Distribution</h3>
+                        <div id="specialization-chart" class="chart">
+                            <!-- Chart will be rendered here -->
                         </div>
                     </div>
 
@@ -212,6 +237,13 @@
                         <h3>Area of Interest</h3>
                         <div id="interest-chart" class="chart">
                             <!-- Interest distribution -->
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3>Average Scores</h3>
+                        <div id="scores-chart" class="chart">
+                            <!-- Scores chart -->
                         </div>
                     </div>
                 </div>
@@ -269,7 +301,7 @@
             <div class="modal-body">
                 <div class="warning-message">
                     <p><strong>⚠️ Warning:</strong> This will permanently delete all leads from the database.</p>
-                    <p>This action cannot be undone. All lead data, including contact information and assessment results, will be lost forever.</p>
+                    <p>This action cannot be undone. All lead data will be lost forever.</p>
                 </div>
                 
                 <div class="confirmation-input">
@@ -285,9 +317,6 @@
                 <div class="modal-actions">
                     <button class="btn-secondary" onclick="closeResetModal()">Cancel</button>
                     <button class="btn-danger" onclick="confirmReset()" id="confirm-reset-btn" disabled>
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M2 4H14M6 4V2.5C6 2.22386 6.22386 2 6.5 2H9.5C9.77614 2 10 2.22386 10 2.5V4M12 4V13C12 13.5523 11.5523 14 11 14H5C4.44772 14 4 13.5523 4 13V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
                         Delete All Data
                     </button>
                 </div>
@@ -310,54 +339,30 @@
                 <p class="modal-description">Select the date range for leads you want to export:</p>
                 <div class="export-options">
                     <button class="export-option-btn" onclick="exportCSV('all')">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
-                            <path d="M10 6V10L13 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
                         <div>
                             <div class="option-title">All Time</div>
                             <div class="option-desc">Export all leads</div>
                         </div>
                     </button>
                     <button class="export-option-btn" onclick="exportCSV('today')">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                            <path d="M7 2V4M13 2V4M3 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
                         <div>
                             <div class="option-title">Today</div>
                             <div class="option-desc">Leads from today</div>
                         </div>
                     </button>
                     <button class="export-option-btn" onclick="exportCSV('week')">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                            <path d="M7 2V4M13 2V4M3 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                            <circle cx="7" cy="11" r="1" fill="currentColor"/>
-                            <circle cx="10" cy="11" r="1" fill="currentColor"/>
-                            <circle cx="13" cy="11" r="1" fill="currentColor"/>
-                        </svg>
                         <div>
                             <div class="option-title">This Week</div>
                             <div class="option-desc">Last 7 days</div>
                         </div>
                     </button>
                     <button class="export-option-btn" onclick="exportCSV('month')">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                            <path d="M7 2V4M13 2V4M3 8H17M7 11H7.01M10 11H10.01M13 11H13.01M7 14H7.01M10 14H10.01M13 14H13.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
                         <div>
                             <div class="option-title">This Month</div>
                             <div class="option-desc">Current month</div>
                         </div>
                     </button>
                     <button class="export-option-btn" onclick="exportCSV('year')">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                            <path d="M7 2V4M13 2V4M3 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                            <path d="M6 11H14M6 14H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
                         <div>
                             <div class="option-title">This Year</div>
                             <div class="option-desc">Current year</div>
